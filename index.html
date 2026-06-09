@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MathForge - LaTeX to SVG/PNG Math Compiler</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom Styling -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- MathJax 3 Configuration -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+        processEnvironments: true
+      },
+      options: {
+        enableMenu: false
+      },
+      svg: {
+        fontCache: 'local'
+      }
+    };
+  </script>
+  <!-- Load MathJax 3 -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async></script>
+</head>
+<body>
+  <div class="glow-bg"></div>
+  
+  <header>
+    <div class="logo">
+      <i class="fa-solid fa-square-root-variable logo-icon"></i>
+      <h1>Math<span>Forge</span></h1>
+    </div>
+    <p class="subtitle">Biên dịch công thức LaTeX sang Vector SVG & PNG sắc nét</p>
+  </header>
+
+  <main class="app-container">
+    <!-- Left Column: Input and Snippets -->
+    <section class="panel editor-panel">
+      <div class="panel-header">
+        <h2><i class="fa-solid fa-code"></i> Nhập công thức LaTeX</h2>
+        <span class="badge">TeX</span>
+      </div>
+      
+      <!-- Snippets Toolbar -->
+      <div class="toolbar">
+        <div class="toolbar-group">
+          <span class="group-label">Ký hiệu:</span>
+          <button class="tool-btn" data-snippet="\alpha" title="Alpha">α</button>
+          <button class="tool-btn" data-snippet="\beta" title="Beta">β</button>
+          <button class="tool-btn" data-snippet="\theta" title="Theta">θ</button>
+          <button class="tool-btn" data-snippet="\pi" title="Pi">π</button>
+          <button class="tool-btn" data-snippet="\infty" title="Vô cùng">∞</button>
+          <button class="tool-btn" data-snippet="\partial" title="Đạo hàm riêng">∂</button>
+          <button class="tool-btn" data-snippet="\Delta" title="Delta">Δ</button>
+          <button class="tool-btn" data-snippet="\nabla" title="Nabla">∇</button>
+        </div>
+        <div class="toolbar-group">
+          <span class="group-label">Cấu trúc:</span>
+          <button class="tool-btn" data-snippet="\frac{a}{b}" title="Phân số"><span class="fraction"><span>a</span><span>b</span></span></button>
+          <button class="tool-btn" data-snippet="\sqrt{x}" title="Căn bậc 2">√x</button>
+          <button class="tool-btn" data-snippet="x^{n}" title="Mũ">xⁿ</button>
+          <button class="tool-btn" data-snippet="x_{i}" title="Chỉ số dưới">xᵢ</button>
+          <button class="tool-btn" data-snippet="\int_{a}^{b} x \, dx" title="Tích phân">∫</button>
+          <button class="tool-btn" data-snippet="\sum_{i=1}^{n}" title="Tổng">∑</button>
+          <button class="tool-btn" data-snippet="\lim_{x \to \infty}" title="Giới hạn">lim</button>
+        </div>
+        <div class="toolbar-group">
+          <span class="group-label">Ma trận & Ngoặc:</span>
+          <button class="tool-btn" data-snippet="\begin{matrix} a & b \\ c & d \end{matrix}" title="Ma trận 2x2">Matrix</button>
+          <button class="tool-btn" data-snippet="\left( x \right)" title="Ngoặc tròn ()">(x)</button>
+          <button class="tool-btn" data-snippet="\left[ x \right]" title="Ngoặc vuông []">[x]</button>
+          <button class="tool-btn" data-snippet="\left\{ x \right\}" title="Ngoặc nhọn {}">{x}</button>
+        </div>
+      </div>
+      
+      <div class="textarea-wrapper">
+        <textarea id="latex-input" placeholder="Nhập mã LaTeX của bạn ở đây... Ví dụ: \int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}">\int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}</textarea>
+      </div>
+
+      <!-- Controls / Options -->
+      <div class="options-container">
+        <div class="option-item">
+          <label for="display-mode"><i class="fa-solid fa-align-center"></i> Chế độ hiển thị</label>
+          <select id="display-mode">
+            <option value="display" selected>Display Math (Căn giữa, lớn)</option>
+            <option value="inline">Inline Math (Nằm trên dòng)</option>
+          </select>
+        </div>
+
+        <div class="option-item">
+          <label for="scale-slider"><i class="fa-solid fa-up-down-left-right"></i> Tỉ lệ phóng to (<span id="scale-value">2.0</span>x)</label>
+          <input type="range" id="scale-slider" min="1.0" max="5.0" step="0.1" value="2.0">
+        </div>
+
+        <div class="option-item">
+          <label><i class="fa-solid fa-palette"></i> Màu công thức</label>
+          <div class="color-picker-group">
+            <div class="color-swatches">
+              <button class="color-swatch active" data-color="#ffffff" style="background-color: #ffffff;" title="Trắng"></button>
+              <button class="color-swatch" data-color="#000000" style="background-color: #000000;" title="Đen"></button>
+              <button class="color-swatch" data-color="#3b82f6" style="background-color: #3b82f6;" title="Xanh dương"></button>
+              <button class="color-swatch" data-color="#10b981" style="background-color: #10b981;" title="Xanh lá"></button>
+              <button class="color-swatch" data-color="#f59e0b" style="background-color: #f59e0b;" title="Vàng"></button>
+              <button class="color-swatch" data-color="#ef4444" style="background-color: #ef4444;" title="Đỏ"></button>
+            </div>
+            <input type="color" id="custom-color-picker" value="#ffffff" title="Chọn màu tùy chỉnh">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Live Preview and Copy Actions -->
+    <section class="panel preview-panel">
+      <div class="panel-header">
+        <h2><i class="fa-solid fa-eye"></i> Xem trước trực quan</h2>
+        <div class="bg-toggle-container">
+          <span class="toggle-label">Nền:</span>
+          <button class="bg-toggle-btn active" data-bg="checkered" title="Nền caro (trong suốt)"><i class="fa-solid fa-border-all"></i></button>
+          <button class="bg-toggle-btn" data-bg="dark" title="Nền tối"><i class="fa-solid fa-circle" style="color: #1e293b;"></i></button>
+          <button class="bg-toggle-btn" data-bg="light" title="Nền sáng"><i class="fa-solid fa-circle" style="color: #f8fafc;"></i></button>
+        </div>
+      </div>
+
+      <!-- Preview Render Target -->
+      <div class="preview-area checkered" id="preview-box">
+        <div id="math-output"></div>
+      </div>
+
+      <!-- Copy & Download Actions -->
+      <div class="actions-grid">
+        <button id="btn-copy-svg" class="action-btn primary">
+          <i class="fa-solid fa-copy"></i>
+          <span>Sao chép ảnh SVG</span>
+        </button>
+        
+        <button id="btn-copy-png" class="action-btn primary">
+          <i class="fa-solid fa-file-image"></i>
+          <span>Sao chép ảnh PNG</span>
+        </button>
+
+        <button id="btn-copy-code" class="action-btn secondary">
+          <i class="fa-solid fa-terminal"></i>
+          <span>Sao chép Code SVG</span>
+        </button>
+        
+        <button id="btn-download-svg" class="action-btn secondary">
+          <i class="fa-solid fa-download"></i>
+          <span>Tải xuống SVG</span>
+        </button>
+
+        <button id="btn-download-png" class="action-btn secondary">
+          <i class="fa-solid fa-file-arrow-down"></i>
+          <span>Tải xuống PNG</span>
+        </button>
+        
+        <button id="btn-save-formula" class="action-btn secondary">
+          <i class="fa-solid fa-bookmark"></i>
+          <span>Lưu vào thư viện</span>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Library / History Section -->
+  <section class="panel library-panel">
+    <div class="panel-header">
+      <h2><i class="fa-solid fa-folder-open"></i> Thư viện công thức của bạn</h2>
+      <button id="btn-clear-library" class="clear-btn" title="Xóa tất cả"><i class="fa-solid fa-trash-can"></i> Xóa tất cả</button>
+    </div>
+    <div class="library-empty" id="library-empty-msg">
+      <i class="fa-solid fa-info-circle"></i> Chưa có công thức nào được lưu. Bấm "Lưu vào thư viện" để lưu lại các công thức thường dùng.
+    </div>
+    <div class="library-grid" id="library-items"></div>
+  </section>
+
+  <!-- Canvas for PNG rendering (hidden) -->
+  <canvas id="export-canvas" style="display: none;"></canvas>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-box"></div>
+
+  <footer>
+    <p>&copy; 2026 MathForge. Được phát triển để hỗ trợ soạn thảo tài liệu khoa học chất lượng cao.</p>
+  </footer>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
