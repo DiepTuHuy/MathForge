@@ -441,9 +441,14 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 /* MathJax SVG styling overrides */
+#math-output mjx-container {
+  max-width: none !important;
+}
+
 #math-output svg {
   display: block;
   margin: 0 auto;
+  max-width: none !important;
 }
 
 /* Action Buttons Grid */
