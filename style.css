@@ -416,8 +416,6 @@ input[type="color"]::-webkit-color-swatch {
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 1.5rem;
   margin-bottom: 1.25rem;
   overflow: auto;
@@ -437,7 +435,9 @@ input[type="color"]::-webkit-color-swatch {
 
 #math-output {
   transition: transform 0.2s ease;
-  max-width: 100%;
+  margin: auto;
+  max-width: none;
+  width: max-content;
 }
 
 /* MathJax SVG styling overrides */
