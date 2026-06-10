@@ -113,6 +113,7 @@ h1 span {
   flex-direction: column;
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  min-width: 0;
 }
 
 .panel:hover {
@@ -443,6 +444,8 @@ input[type="color"]::-webkit-color-swatch {
 /* MathJax SVG styling overrides */
 #math-output mjx-container {
   max-width: none !important;
+  width: auto !important;
+  display: inline-block !important;
 }
 
 #math-output svg {
