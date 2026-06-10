@@ -9,6 +9,9 @@ Vì ứng dụng được xây dựng hoàn toàn bằng HTML, CSS và JavaScrip
 ## 🌟 Tính năng nổi bật
 
 *   **Xem trước trực tiếp (Live Preview):** Tự động render mã LaTeX sang công thức toán học sắc nét ngay khi gõ bằng thư viện MathJax 3.
+*   **Tương thích hoàn hảo với Google Docs & MS Word:**
+    *   **Sao chép LaTeX (Docs/Word):** Tự động bọc mã LaTeX trong cặp ký tự `$$...$$` để dán trực tiếp vào Google Docs, sẵn sàng biên dịch hàng loạt thông qua add-on *Auto-LaTeX Equations*.
+    *   **Sao chép MathML (Word):** Tạo và sao chép mã XML MathML gốc của công thức. Khi dán vào Microsoft Word, nó sẽ tự động được nhận dạng và chuyển đổi thành đối tượng **Office Equation** gốc, cho phép chỉnh sửa nội dung trực tiếp trên Word.
 *   **Sao chép trực tiếp dưới dạng ảnh:**
     *   **Sao chép ảnh SVG (Vector):** Lưu blob dạng `image/svg+xml` trực tiếp vào clipboard, cho phép dán trực tiếp ảnh vector không bể vỡ vào các phần mềm đồ họa như Illustrator, Inkscape, Figma.
     *   **Sao chép ảnh PNG:** Tự động kết xuất đồ họa vector sang ảnh pixel dạng `image/png` với thuật toán siêu mẫu (4x supersampling), giúp dán ảnh sắc nét hoàn hảo vào các trình soạn thảo văn phòng như Google Docs, MS Word, PowerPoint...
@@ -16,6 +19,7 @@ Vì ứng dụng được xây dựng hoàn toàn bằng HTML, CSS và JavaScrip
 *   **Thanh công cụ ký hiệu (Snippets):** Cung cấp các nút bấm nhập nhanh các ký hiệu phổ biến như phân số, căn thức, tích phân, ma trận, giới hạn, chữ Hy Lạp...
 *   **Tự do tùy chỉnh:** Cho phép thay đổi tỷ lệ phóng to (scale), chế độ (inline/display), và bảng chọn màu công thức tùy biến.
 *   **Thư viện lưu trữ cục bộ:** Lưu lại các công thức toán đã biên dịch vào bộ nhớ cục bộ (`localStorage`) của máy để tái sử dụng bất cứ lúc nào.
+
 
 ---
 

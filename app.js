@@ -20,6 +20,8 @@ const elements = {
   bgToggleBtns: document.querySelectorAll('.bg-toggle-btn'),
   btnCopySvg: document.getElementById('btn-copy-svg'),
   btnCopyPng: document.getElementById('btn-copy-png'),
+  btnCopyDocxLatex: document.getElementById('btn-copy-docx-latex'),
+  btnCopyMathml: document.getElementById('btn-copy-mathml'),
   btnCopyCode: document.getElementById('btn-copy-code'),
   btnDownloadSvg: document.getElementById('btn-download-svg'),
   btnDownloadPng: document.getElementById('btn-download-png'),
@@ -245,6 +247,54 @@ elements.btnCopyPng.addEventListener('click', () => {
       }
     }, 'image/png');
   });
+});
+
+// Copy LaTeX for Google Docs/Word (wrapped in $$...$$)
+elements.btnCopyDocxLatex.addEventListener('click', async () => {
+  if (!state.latex) {
+    showToast('Chưa có công thức để sao chép!', 'error');
+    return;
+  }
+  
+  let wrappedLatex = state.latex.trim();
+  if (wrappedLatex.startsWith('$$') && wrappedLatex.endsWith('$$')) {
+    // Already has display mode delimiters
+  } else if (wrappedLatex.startsWith('$') && wrappedLatex.endsWith('$')) {
+    // Convert inline $ to display $$ for Docs
+    wrappedLatex = `$$${wrappedLatex.slice(1, -1).trim()}$$`;
+  } else {
+    wrappedLatex = `$$${wrappedLatex}$$`;
+  }
+
+  try {
+    await navigator.clipboard.writeText(wrappedLatex);
+    showToast('Đã sao chép LaTeX dạng $$...$$ cho Google Docs!', 'success');
+  } catch (err) {
+    showToast('Sao chép thất bại.', 'error');
+  }
+});
+
+// Copy MathML for MS Word
+elements.btnCopyMathml.addEventListener('click', async () => {
+  if (!state.latex) {
+    showToast('Chưa có công thức để sao chép!', 'error');
+    return;
+  }
+
+  try {
+    if (typeof MathJax !== 'undefined' && MathJax.tex2mml) {
+      const isDisplay = state.displayMode === 'display';
+      const mmlText = MathJax.tex2mml(state.latex, { display: isDisplay });
+      
+      await navigator.clipboard.writeText(mmlText);
+      showToast('Đã sao chép MathML (Word nhận diện làm Equation)!', 'success');
+    } else {
+      showToast('MathJax chưa tải xong hoặc không hỗ trợ MathML!', 'error');
+    }
+  } catch (err) {
+    console.error('MathML conversion error:', err);
+    showToast('Lỗi chuyển đổi công thức sang MathML.', 'error');
+  }
 });
 
 // Download SVG file
