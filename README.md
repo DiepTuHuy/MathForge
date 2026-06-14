@@ -1,46 +1,63 @@
 # MathForge - LaTeX to SVG/PNG Math Compiler
 
-**MathForge** là một ứng dụng web gọn nhẹ, trực quan giúp bạn biên dịch nhanh chóng các công thức toán từ mã LaTeX sang định dạng ảnh vector **SVG** hoặc **PNG** chất lượng cao để chèn vào các tài liệu thuyết trình, báo cáo nghiên cứu khoa học, tài liệu Word, hoặc slide PowerPoint.
+**MathForge** là một ứng dụng web Single-Page App (SPA) gọn nhẹ, trực quan và hiện đại, giúp biên dịch nhanh chóng các công thức toán học từ mã LaTeX sang định dạng ảnh vector **SVG** hoặc raster **PNG** chất lượng cao. Ảnh xuất ra có thể chèn trực tiếp vào các tài liệu thuyết trình (Slide), báo cáo nghiên cứu khoa học, tài liệu Word, hoặc slide PowerPoint.
 
-Vì ứng dụng được xây dựng hoàn toàn bằng HTML, CSS và JavaScript thuần (không cần bất kỳ thư viện phía máy chủ nào), bạn có thể chạy ứng dụng này trực tiếp trên trình duyệt của mình mà không cần cài đặt phần mềm cồng kềnh.
-
----
-
-## 🌟 Tính năng nổi bật
-
-*   **Xem trước trực tiếp (Live Preview):** Tự động render mã LaTeX sang công thức toán học sắc nét ngay khi gõ bằng thư viện MathJax 3.
-*   **Tương thích hoàn hảo với Google Docs & MS Word:**
-    *   **Sao chép LaTeX (Docs/Word):** Tự động bọc mã LaTeX trong cặp ký tự `$$...$$` để dán trực tiếp vào Google Docs, sẵn sàng biên dịch hàng loạt thông qua add-on *Auto-LaTeX Equations*.
-    *   **Sao chép MathML (Word):** Tạo và sao chép mã XML MathML gốc của công thức. Khi dán vào Microsoft Word, nó sẽ tự động được nhận dạng và chuyển đổi thành đối tượng **Office Equation** gốc, cho phép chỉnh sửa nội dung trực tiếp trên Word.
-*   **Sao chép trực tiếp dưới dạng ảnh:**
-    *   **Sao chép ảnh SVG (Vector):** Lưu blob dạng `image/svg+xml` trực tiếp vào clipboard, cho phép dán trực tiếp ảnh vector không bể vỡ vào các phần mềm đồ họa như Illustrator, Inkscape, Figma.
-    *   **Sao chép ảnh PNG:** Tự động kết xuất đồ họa vector sang ảnh pixel dạng `image/png` với thuật toán siêu mẫu (4x supersampling), giúp dán ảnh sắc nét hoàn hảo vào các trình soạn thảo văn phòng như Google Docs, MS Word, PowerPoint...
-*   **Tải xuống file:** Hỗ trợ lưu trữ công thức về máy dưới dạng tệp tin `.svg` hoặc `.png` nhanh chóng.
-*   **Thanh công cụ ký hiệu (Snippets):** Cung cấp các nút bấm nhập nhanh các ký hiệu phổ biến như phân số, căn thức, tích phân, ma trận, giới hạn, chữ Hy Lạp...
-*   **Tự do tùy chỉnh:** Cho phép thay đổi tỷ lệ phóng to (scale), chế độ (inline/display), và bảng chọn màu công thức tùy biến.
-*   **Thư viện lưu trữ cục bộ:** Lưu lại các công thức toán đã biên dịch vào bộ nhớ cục bộ (`localStorage`) của máy để tái sử dụng bất cứ lúc nào.
-
+👉 **Trải nghiệm trực tuyến**: [GitHub Pages Demo](https://dieptuhuy.github.io/MathForge/)
 
 ---
 
-## 🚀 Hướng dẫn khởi chạy ứng dụng
+## ✨ Tính năng nổi bật
 
-Bạn có thể chạy ứng dụng bằng 3 cách cực kỳ đơn giản sau:
+### 1. Xem trước thời gian thực (Live Preview)
+*   Tự động biên dịch mã LaTeX sang công thức toán học sắc nét ngay khi gõ bằng thư viện `MathJax 3`.
+*   Tùy biến nền xem trước: Nền caro (trong suốt), nền tối (Dark mode) hoặc nền sáng (Light mode) để phù hợp với ngữ cảnh chèn tài liệu của bạn.
 
-### Cách 1: Chạy trực tiếp (Không cần cài đặt)
-Chỉ cần tải thư mục này về máy, click đúp trực tiếp vào file **`index.html`** để mở ứng dụng trên bất kỳ trình duyệt nào (Chrome, Safari, Edge, Firefox).
+### 2. Định dạng sao chép đa dạng (Tương thích cao với Office)
+*   **Sao chép ảnh SVG (Vector)**: Lưu blob dạng `image/svg+xml` trực tiếp vào clipboard, cho phép dán ảnh vector không bị vỡ/nhòe vào các phần mềm thiết kế đồ họa chuyên nghiệp như Figma, Adobe Illustrator, Inkscape.
+*   **Sao chép ảnh PNG (Sắc nét)**: Tự động kết xuất đồ họa vector sang ảnh pixel dạng `image/png` thông qua Canvas ẩn với thuật toán siêu mẫu (4x supersampling), giúp ảnh dán sắc nét hoàn hảo trên MS Word, PowerPoint.
+*   **Sao chép LaTeX (Docs/Word)**: Tự động bọc mã LaTeX trong cặp ký tự `$$...$$` để dán trực tiếp vào Google Docs, sẵn sàng biên dịch hàng loạt thông qua các add-on như *Auto-LaTeX Equations*.
+*   **Sao chép MathML (Microsoft Word Equation)**: Biên dịch công thức LaTeX sang mã XML MathML gốc. Khi dán vào Microsoft Word, trình soạn thảo sẽ tự động nhận diện và chuyển đổi thành đối tượng **Office Equation** gốc, cho phép bạn chỉnh sửa nội dung toán học trực tiếp trên Word.
+*   **Sao chép mã SVG**: Sao chép trực tiếp mã nguồn thẻ `<svg>` để nhúng trực tiếp vào các trang web hoặc dự án HTML/CSS.
+
+### 3. Tự do tùy chỉnh & Tiện ích hỗ trợ
+*   **Thanh công cụ ký hiệu (Snippets)**: Cung cấp các nút nhập nhanh các ký hiệu Hy Lạp ($\alpha, \beta, \theta$), các cấu trúc phổ biến (phân số, căn thức, mũ, tích phân, tổng, giới hạn) và ma trận, giúp việc soạn thảo LaTeX trở nên dễ dàng hơn.
+*   **Tỷ lệ phóng to (Scale)**: Cho phép điều chỉnh độ phóng đại từ 1.0x đến 5.0x để có được kích thước xuất ảnh mong muốn.
+*   **Chế độ hiển thị**: Chuyển đổi linh hoạt giữa Display Math (căn giữa, kích thước chuẩn) và Inline Math (nằm cùng dòng chữ).
+*   **Bảng chọn màu sắc (Color Picker)**: Thay đổi màu sắc của công thức bằng các swatch màu có sẵn (Trắng, Đen, Xanh, Đỏ, Vàng...) hoặc chọn màu tùy chỉnh bất kỳ qua bảng màu hệ thống.
+
+### 4. Thư viện công thức cá nhân (Local Storage)
+*   Cho phép lưu lại các công thức toán đã biên dịch vào bộ nhớ cục bộ của trình duyệt (`localStorage`) dưới dạng thư viện cá nhân.
+*   Bạn có thể xem lại, sao chép nhanh hoặc xóa các công thức trong thư viện bất kỳ lúc nào mà không sợ mất dữ liệu khi tắt trình duyệt.
+
+---
+
+## 📂 Cấu trúc mã nguồn
+
+Dự án được xây dựng hoàn toàn trên nền tảng Frontend thuần (Vanilla HTML/CSS/JS) với giao diện tối giản, sang trọng:
+
+*   [index.html](file:///Users/dieptuhuy/Library/CloudStorage/GoogleDrive-dieptuhuy80@gmail.com/My%20Drive/Paper%20ICLR/code/math_compiler/index.html): Định nghĩa cấu trúc ứng dụng và tích hợp bộ cấu hình MathJax 3.
+*   [style.css](file:///Users/dieptuhuy/Library/CloudStorage/GoogleDrive-dieptuhuy80@gmail.com/My%20Drive/Paper%20ICLR/code/math_compiler/style.css): Thiết kế giao diện Dashboard tối với các hạt màu phát sáng (glow blobs) và hiệu ứng mờ kính (glassmorphism).
+*   [app.js](file:///Users/dieptuhuy/Library/CloudStorage/GoogleDrive-dieptuhuy80@gmail.com/My%20Drive/Paper%20ICLR/code/math_compiler/app.js): Chịu trách nhiệm render MathJax, điều khiển các tùy chọn màu/kích thước, thực hiện sao chép ảnh thông qua Clipboard API và quản lý thư viện lưu trữ.
+
+---
+
+## 🚀 Hướng dẫn chạy cục bộ (Local Development)
+
+Bạn có thể chạy ứng dụng trực tiếp mà không cần cài đặt phức tạp bằng các cách sau:
+
+### Cách 1: Chạy trực tiếp qua file tĩnh
+Chỉ cần tải thư mục này về máy, click đúp trực tiếp vào file **`index.html`** để mở ứng dụng trên bất kỳ trình duyệt nào.
+*(Lưu ý: Một số trình duyệt có thể chặn tính năng sao chép ảnh PNG/SVG vào clipboard vì lý do bảo mật khi chạy qua giao thức `file://`)*
 
 ### Cách 2: Chạy qua Local Server (Khuyên dùng)
-Để các tính năng sao chép ảnh hoạt động mượt mà và bảo mật nhất, bạn nên chạy ứng dụng thông qua một máy chủ local gọn nhẹ. 
-Mở Terminal tại thư mục dự án và chạy lệnh:
+Để các tính năng sao chép ảnh hoạt động bảo mật và mượt mà nhất, hãy chạy qua một máy chủ tĩnh đơn giản.
+Mở Terminal tại thư mục dự án và chạy:
 ```bash
 python3 -m http.server 8000
 ```
 Sau đó truy cập địa chỉ: **[http://localhost:8000](http://localhost:8000)** trên trình duyệt.
 
-### Cách 3: Chạy trực tuyến qua GitHub Pages (Miễn phí & Tiện lợi)
-Bạn có thể biến repository này thành một trang web online chạy 24/7 chỉ với 2 click chuột:
-1.  Truy cập vào Repository của bạn trên GitHub.
-2.  Chọn **Settings** -> **Pages** (ở menu bên trái).
-3.  Tại mục **Build and deployment** -> **Branch**, chọn nhánh **`main`** và thư mục **`/ (root)`**, sau đó nhấn **Save**.
-4.  Chờ khoảng 1-2 phút, GitHub sẽ cung cấp cho bạn một đường link trực tuyến công khai (ví dụ: `https://<ten-user>.github.io/MathForge/`) để sử dụng mọi lúc mọi nơi.
+---
+
+## 📝 Giấy phép
+Dự án được phân phối tự do nhằm hỗ trợ các nhà nghiên cứu, sinh viên và giáo viên soạn thảo tài liệu học thuật chuyên nghiệp một cách nhanh chóng nhất.
