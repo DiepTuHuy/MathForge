@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Ký Tự Toán Học Hy Lạp Tương Tác</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2.5 bg-indigo-100 text-indigo-600 rounded-xl">
+                    <i data-lucide="binary" class="w-8 h-8"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                        Ký Tự Hy Lạp <span class="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-semibold">Toán & Vật Lý</span>
+                    </h1>
+                    <p class="text-xs text-slate-500">Tra cứu nhanh, lấy mã LaTeX & sao chép chỉ với 1 cú click</p>
+                </div>
+            </div>
+            
+            <!-- Quick Settings: Copy Mode -->
+            <div class="bg-slate-100 p-1 rounded-xl flex items-center gap-1 w-full sm:w-auto">
+                <a href="index.html" class="mr-2 text-xs font-semibold px-3 py-2 text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+                    <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Về MathForge
+                </a>
+                <span class="text-xs font-semibold px-3 text-slate-500 hidden md:inline">Click để sao chép:</span>
+                <button onclick="setCopyMode('char')" id="btn-mode-char" class="flex-1 sm:flex-initial text-xs font-medium px-3 py-2 rounded-lg transition-all bg-white text-slate-800 shadow-sm">
+                    Ký tự (α)
+                </button>
+                <button onclick="setCopyMode('latex')" id="btn-mode-latex" class="flex-1 sm:flex-initial text-xs font-medium px-3 py-2 rounded-lg transition-all text-slate-600 hover:text-slate-800">
+                    Mã LaTeX (\alpha)
+                </button>
+                <button onclick="setCopyMode('html')" id="btn-mode-html" class="flex-1 sm:flex-initial text-xs font-medium px-3 py-2 rounded-lg transition-all text-slate-600 hover:text-slate-800">
+                    Mã HTML (&alpha;)
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 sm:px-6 lg:px-8 flex flex-col lg:flex-row gap-6">
+        
+        <!-- Left Column: Toolbar and Cards -->
+        <div class="flex-1 flex flex-col gap-6">
+            
+            <!-- Control Bar (Search, Filters, Layout) -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-4 items-center justify-between">
+                <!-- Search bar -->
+                <div class="relative w-full sm:w-72">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                        <i data-lucide="search" class="w-5 h-5"></i>
+                    </span>
+                    <input type="text" id="search-input" oninput="filterCards()" placeholder="Tìm kiếm tên, ký tự, ý nghĩa..." class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all bg-slate-50 focus:bg-white" />
+                </div>
+
+                <!-- Category Filters -->
+                <div class="flex gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+                    <button onclick="filterCategory('all')" id="filter-all" class="text-xs font-semibold px-3.5 py-2 rounded-lg bg-indigo-600 text-white shadow-sm transition-all whitespace-nowrap">
+                        Tất cả
+                    </button>
+                    <button onclick="filterCategory('lowercase')" id="filter-lowercase" class="text-xs font-semibold px-3.5 py-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all whitespace-nowrap">
+                        Chữ thường
+                    </button>
+                    <button onclick="filterCategory('uppercase')" id="filter-uppercase" class="text-xs font-semibold px-3.5 py-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all whitespace-nowrap">
+                        Chữ hoa
+                    </button>
+                    <button onclick="filterCategory('popular')" id="filter-popular" class="text-xs font-semibold px-3.5 py-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all whitespace-nowrap">
+                        Phổ biến
+                    </button>
+                </div>
+            </div>
+
+            <!-- Greek Letters Grid -->
+            <div id="cards-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                <!-- Cards will be dynamically rendered here via Javascript -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden flex-col items-center justify-center py-16 bg-white rounded-2xl border border-dashed border-slate-300 text-center">
+                <div class="p-4 bg-slate-100 rounded-full text-slate-400 mb-4">
+                    <i data-lucide="search-x" class="w-10 h-10"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800">Không tìm thấy kết quả nào</h3>
+                <p class="text-slate-500 text-sm mt-1">Vui lòng kiểm tra lại từ khóa hoặc chuyển đổi danh mục.</p>
+            </div>
+        </div>
+
+        <!-- Right Column: Interactive Utilities -->
+        <aside class="w-full lg:w-80 flex flex-col gap-6">
+            
+            <!-- Sandbox Workspace -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                        <i data-lucide="file-edit" class="w-5 h-5 text-indigo-600"></i>
+                        Khu vực nháp nhanh
+                    </h3>
+                    <button onclick="clearSandbox()" class="text-xs text-rose-500 hover:text-rose-700 font-semibold flex items-center gap-1 transition-all">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Xóa
+                    </button>
+                </div>
+                <p class="text-xs text-slate-500">Ký tự bạn vừa click sao chép cũng sẽ tự động xuất hiện ở đây để bạn ghép biểu thức.</p>
+                <textarea id="sandbox-area" rows="4" class="w-full p-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all resize-none font-mono" placeholder="α = β + γ * Δ..."></textarea>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="copySandboxText()" class="w-full text-xs bg-indigo-50 text-indigo-600 hover:bg-indigo-100 font-semibold py-2.5 px-4 rounded-xl transition-all flex items-center justify-center gap-1.5">
+                        <i data-lucide="copy" class="w-4 h-4"></i> Copy nháp
+                    </button>
+                    <button onclick="insertTemplate()" class="w-full text-xs bg-slate-50 text-slate-600 hover:bg-slate-100 font-semibold py-2.5 px-4 rounded-xl transition-all flex items-center justify-center gap-1.5 border border-slate-200">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i> Thử mẫu
+                    </button>
+                </div>
+            </div>
+
+            <!-- Education / Quick Guide Card -->
+            <div class="bg-gradient-to-br from-indigo-900 to-slate-900 text-white p-6 rounded-2xl shadow-xl flex flex-col gap-4 relative overflow-hidden">
+                <!-- Decorative SVG background shapes -->
+                <div class="absolute -right-10 -bottom-10 opacity-10 text-white">
+                    <i data-lucide="sigma" class="w-48 h-48"></i>
+                </div>
+                
+                <h3 class="font-bold text-lg flex items-center gap-2">
+                    <i data-lucide="graduation-cap" class="text-indigo-400"></i>
+                    Bản tin Kiến Thức
+                </h3>
+                
+                <div class="space-y-3 text-xs text-indigo-100 z-10">
+                    <p><strong>LaTeX trong Toán học:</strong> LaTeX là tiêu chuẩn soạn thảo tài liệu khoa học. Trong tài liệu LaTeX, hầu hết các ký tự Hy Lạp thường được gõ bằng lệnh gạch chéo ngược <code>\</code> + tên ký tự (Ví dụ: <code>\lambda</code> cho λ).</p>
+                    <p><strong>Mã HTML Entity:</strong> Hữu ích khi bạn đang viết mã thô cho trang web và muốn hiển thị các ký tự đặc biệt một cách an toàn mà không sợ lỗi font.</p>
+                </div>
+                
+                <div class="border-t border-indigo-800/60 pt-3 mt-1 flex items-center justify-between text-xs text-indigo-300 z-10">
+                    <span>Tổng số ký tự: <strong class="text-white text-sm" id="stats-count">48</strong></span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Sẵn sàng</span>
+                </div>
+            </div>
+
+            <!-- Developer Credit -->
+            <div class="text-center text-xs text-slate-400">
+                Thiết kế bởi Gemini • Không sử dụng database bên thứ ba.
+            </div>
+        </aside>
+    </main>
+
+    <!-- Floating Global Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 transform translate-y-20 opacity-0 bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 transition-all duration-300 z-50 pointer-events-none max-w-sm">
+        <div class="p-1 bg-indigo-600 rounded-lg" id="toast-icon-container">
+            <i data-lucide="check" class="w-4 h-4 text-white"></i>
+        </div>
+        <div>
+            <p id="toast-title" class="text-xs font-semibold text-slate-300">Đã sao chép thành công!</p>
+            <p id="toast-msg" class="text-sm font-bold text-white"></p>
+        </div>
+    </div>
+
+    <!-- Script Block -->
+    <script>
+        // Database of all 24 Greek Letters (Uppercase and Lowercase)
+        const greekLetters = [
+            { id: 1, char: 'α', name: 'Alpha', type: 'lowercase', latex: '\\alpha', html: '&alpha;', popular: true, usage: 'Hệ số nở nhiệt, góc phẳng, hạt phóng xạ alpha, độ hấp thụ.' },
+            { id: 2, char: 'Α', name: 'Alpha', type: 'uppercase', latex: 'A', html: '&Alpha;', popular: false, usage: 'Chữ cái hoa Alpha (ít dùng trong toán vì giống chữ A).' },
+            
+            { id: 3, char: 'β', name: 'Beta', type: 'lowercase', latex: '\\beta', html: '&beta;', popular: true, usage: 'Góc phẳng, hạt phóng xạ beta, tỷ số truyền âm.' },
+            { id: 4, char: 'Β', name: 'Beta', type: 'uppercase', latex: 'B', html: '&Beta;', popular: false, usage: 'Chữ cái hoa Beta (ít dùng vì trùng chữ B).' },
+            
+            { id: 5, char: 'γ', name: 'Gamma', type: 'lowercase', latex: '\\gamma', html: '&gamma;', popular: true, usage: 'Tỷ số nhiệt dung, tia gamma, hệ số Lorentz.' },
+            { id: 6, char: 'Γ', name: 'Gamma', type: 'uppercase', latex: '\\Gamma', html: '&Gamma;', popular: true, usage: 'Hàm Gamma trong toán học, hệ số phản xạ trong kỹ thuật.' },
+            
+            { id: 7, char: 'δ', name: 'Delta', type: 'lowercase', latex: '\\delta', html: '&delta;', popular: true, usage: 'Hàm Kronecker delta, độ biến thiên vô cùng nhỏ, sai số.' },
+            { id: 8, char: 'Δ', name: 'Delta', type: 'uppercase', latex: '\\Delta', html: '&Delta;', popular: true, usage: 'Biệt thức biệt số (Delta), độ biến thiên/sai số tuyệt đối.' },
+            
+            { id: 9, char: 'ε', name: 'Epsilon', type: 'lowercase', latex: '\\epsilon', html: '&epsilon;', popular: true, usage: 'Độ điện môi của môi trường, sai số vô cùng nhỏ trong giới hạn.' },
+            { id: 10, char: 'Ε', name: 'Epsilon', type: 'uppercase', latex: 'E', html: '&Alpha;', popular: false, usage: 'Chữ cái hoa Epsilon.' },
+            
+            { id: 11, char: 'ζ', name: 'Zeta', type: 'lowercase', latex: '\\zeta', html: '&zeta;', popular: false, usage: 'Hàm Riemann zeta, hệ số cản dao động.' },
+            { id: 12, char: 'Ζ', name: 'Zeta', type: 'uppercase', latex: 'Z', html: '&Zeta;', popular: false, usage: 'Chữ cái hoa Zeta.' },
+            
+            { id: 13, char: 'η', name: 'Eta', type: 'lowercase', latex: '\\eta', html: '&eta;', popular: true, usage: 'Hiệu suất động cơ, độ nhớt của chất lỏng.' },
+            { id: 14, char: 'Η', name: 'Eta', type: 'uppercase', latex: 'H', html: '&Eta;', popular: false, usage: 'Chữ cái hoa Eta.' },
+            
+            { id: 15, char: 'θ', name: 'Theta', type: 'lowercase', latex: '\\theta', html: '&theta;', popular: true, usage: 'Góc phẳng trong lượng giác, nhiệt độ mặt phẳng.' },
+            { id: 16, char: 'Θ', name: 'Theta', type: 'uppercase', latex: '\\Theta', html: '&Theta;', popular: true, usage: 'Ký hiệu tiệm cận chặt Big Theta, nhiệt độ không thứ nguyên.' },
+            
+            { id: 17, char: 'ι', name: 'Iota', type: 'lowercase', latex: '\\iota', html: '&iota;', popular: false, usage: 'Chỉ số ma trận, ánh xạ nhúng đơn ánh.' },
+            { id: 18, char: 'Ι', name: 'Iota', type: 'uppercase', latex: 'I', html: '&Iota;', popular: false, usage: 'Chữ cái hoa Iota.' },
+            
+            { id: 19, char: 'κ', name: 'Kappa', type: 'lowercase', latex: '\\kappa', html: '&kappa;', popular: false, usage: 'Độ cong hình học, hằng số hấp dẫn Einstein.' },
+            { id: 20, char: 'Κ', name: 'Kappa', type: 'uppercase', latex: 'K', html: '&Kappa;', popular: false, usage: 'Chữ cái hoa Kappa.' },
+            
+            { id: 21, char: 'λ', name: 'Lambda', type: 'lowercase', latex: '\\lambda', html: '&lambda;', popular: true, usage: 'Bước sóng ánh sáng, trị riêng của ma trận, mật độ điện tích.' },
+            { id: 22, char: 'Λ', name: 'Lambda', type: 'uppercase', latex: '\\Lambda', html: '&Lambda;', popular: true, usage: 'Hằng số vũ trụ học, hàm von Mangoldt.' },
+            
+            { id: 23, char: 'μ', name: 'Mu', type: 'lowercase', latex: '\\mu', html: '&mu;', popular: true, usage: 'Độ từ thẩm, tiền tố micro (10^-6), hệ số ma sát.' },
+            { id: 24, char: 'Μ', name: 'Mu', type: 'uppercase', latex: 'M', html: '&Mu;', popular: false, usage: 'Chữ cái hoa Mu.' },
+            
+            { id: 25, char: 'ν', name: 'Nu', type: 'lowercase', latex: '\\nu', html: '&nu;', popular: true, usage: 'Tần số sóng/ánh sáng, độ nhớt động học, hạt neutrino.' },
+            { id: 26, char: 'Ν', name: 'Nu', type: 'uppercase', latex: 'N', html: '&Nu;', popular: false, usage: 'Chữ cái hoa Nu.' },
+            
+            { id: 27, char: 'ξ', name: 'Xi', type: 'lowercase', latex: '\\xi', html: '&xi;', popular: false, usage: 'Biến ngẫu nhiên, mức độ phản ứng hóa học.' },
+            { id: 28, char: 'Ξ', name: 'Xi', type: 'uppercase', latex: '\\Xi', html: '&Xi;', popular: false, usage: 'Hạt baryon Xi trong vật lý hạt.' },
+            
+            { id: 29, char: 'ο', name: 'Omicron', type: 'lowercase', latex: 'o', html: '&omicron;', popular: false, usage: 'Ký hiệu tiệm cận lớn Small O.' },
+            { id: 30, char: 'Ο', name: 'Omicron', type: 'uppercase', latex: 'O', html: '&Omicron;', popular: false, usage: 'Ký hiệu tiệm cận lớn Big O.' },
+            
+            { id: 31, char: 'π', name: 'Pi', type: 'lowercase', latex: '\\pi', html: '&pi;', popular: true, usage: 'Hằng số Pi (~3.14159), hàm phân phối số nguyên tố.' },
+            { id: 32, char: 'Π', name: 'Pi', type: 'uppercase', latex: '\\Pi', html: '&Pi;', popular: true, usage: 'Toán tử nhân một dãy số (tích chuỗi), áp suất thẩm thấu.' },
+            
+            { id: 33, char: 'ρ', name: 'Rho', type: 'lowercase', latex: '\\rho', html: '&rho;', popular: true, usage: 'Khối lượng riêng, điện trở suất, tọa độ bán kính trong hệ cực.' },
+            { id: 34, char: 'Ρ', name: 'Rho', type: 'uppercase', latex: 'R', html: '&Rho;', popular: false, usage: 'Chữ cái hoa Rho.' },
+            
+            { id: 35, char: 'σ', name: 'Sigma', type: 'lowercase', latex: '\\sigma', html: '&sigma;', popular: true, usage: 'Độ lệch chuẩn trong thống kê, độ dẫn điện, ứng suất kéo.' },
+            { id: 36, char: 'Σ', name: 'Sigma', type: 'uppercase', latex: '\\Sigma', html: '&Sigma;', popular: true, usage: 'Toán tử cộng một dãy số (tổng chuỗi), bảng chữ cái ngôn ngữ.' },
+            
+            { id: 37, char: 'τ', name: 'Tau', type: 'lowercase', latex: '\\tau', html: '&tau;', popular: true, usage: 'Mô-men lực, hằng số thời gian mạch RC, ứng suất cắt.' },
+            { id: 38, char: 'Τ', name: 'Tau', type: 'uppercase', latex: 'T', html: '&Tau;', popular: false, usage: 'Chữ cái hoa Tau.' },
+            
+            { id: 39, char: 'υ', name: 'Upsilon', type: 'lowercase', latex: '\\upsilon', html: '&upsilon;', popular: false, usage: 'Tỷ lệ khối lượng trên ánh sáng trong thiên văn.' },
+            { id: 40, char: 'Υ', name: 'Upsilon', type: 'uppercase', latex: '\\Upsilon', html: '&Upsilon;', popular: false, usage: 'Hạt meson Upsilon.' },
+            
+            { id: 41, char: 'φ', name: 'Phi', type: 'lowercase', latex: '\\phi', html: '&phi;', popular: true, usage: 'Góc pha dao động, tỷ lệ vàng phi (~1.618), từ thông.' },
+            { id: 42, char: 'Φ', name: 'Phi', type: 'uppercase', latex: '\\Phi', html: '&Phi;', popular: true, usage: 'Hàm phân phối tích lũy chuẩn hóa, thông lượng.' },
+            
+            { id: 43, char: 'χ', name: 'Chi', type: 'lowercase', latex: '\\chi', html: '&chi;', popular: false, usage: 'Độ cảm từ/điện, phân phối Chi-bình phương trong thống kê.' },
+            { id: 44, char: 'Χ', name: 'Chi', type: 'uppercase', latex: 'X', html: '&Chi;', popular: false, usage: 'Chữ cái hoa Chi.' },
+            
+            { id: 45, char: 'ψ', name: 'Psi', type: 'lowercase', latex: '\\psi', html: '&psi;', popular: true, usage: 'Hàm sóng trong vật lý lượng tử, hàm polygamma.' },
+            { id: 46, char: 'Ψ', name: 'Psi', type: 'uppercase', latex: '\\Psi', html: '&Psi;', popular: true, usage: 'Hàm sóng vĩ mô trong lượng tử, biểu thị dòng chảy nước.' },
+            
+            { id: 47, char: 'ω', name: 'Omega', type: 'lowercase', latex: '\\omega', html: '&omega;', popular: true, usage: 'Tần số góc, tốc độ góc trong vật lý cơ học.' },
+            { id: 48, char: 'Ω', name: 'Omega', type: 'uppercase', latex: '\\Omega', html: '&Omega;', popular: true, usage: 'Đơn vị điện trở Ohm (Ω), không gian mẫu xác suất.' }
+        ];
+
+        // State variables
+        let currentCopyMode = 'char'; // 'char' | 'latex' | 'html'
+        let currentCategory = 'all'; // 'all' | 'lowercase' | 'uppercase' | 'popular'
+        let searchKeyword = '';
+
+        // Initialize App
+        window.onload = function() {
+            lucide.createIcons();
+            renderCards();
+            updateStatsCount();
+        };
+
+        // Render Letters Grid
+        function renderCards() {
+            const grid = document.getElementById('cards-grid');
+            const emptyState = document.getElementById('empty-state');
+            grid.innerHTML = '';
+
+            const filteredData = greekLetters.filter(item => {
+                // Filter by category
+                if (currentCategory === 'lowercase' && item.type !== 'lowercase') return false;
+                if (currentCategory === 'uppercase' && item.type !== 'uppercase') return false;
+                if (currentCategory === 'popular' && !item.popular) return false;
+
+                // Filter by search keyword
+                if (searchKeyword) {
+                    const kw = searchKeyword.toLowerCase();
+                    return item.name.toLowerCase().includes(kw) || 
+                           item.char.toLowerCase().includes(kw) || 
+                           item.latex.toLowerCase().includes(kw) || 
+                           item.html.toLowerCase().includes(kw) || 
+                           item.usage.toLowerCase().includes(kw);
+                }
+
+                return true;
+            });
+
+            if (filteredData.length === 0) {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('flex');
+            } else {
+                grid.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+                emptyState.classList.remove('flex');
+
+                filteredData.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = "bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-indigo-400 transition-all duration-200 cursor-pointer flex flex-col items-center text-center relative group overflow-hidden";
+                    card.setAttribute('onclick', `handleCardClick('${item.char}', '${item.latex}', '${item.html}')`);
+                    
+                    // Small type label (upper/lower)
+                    const labelColor = item.type === 'lowercase' ? 'bg-indigo-50 text-indigo-600' : 'bg-emerald-50 text-emerald-600';
+                    const labelText = item.type === 'lowercase' ? 'Thường' : 'Hoa';
+
+                    card.innerHTML = `
+                        <!-- Hover Action Indicator -->
+                        <div class="absolute inset-x-0 bottom-0 bg-indigo-50 py-1.5 text-center text-indigo-600 font-bold text-xs opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
+                            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Click để copy
+                        </div>
+                        
+                        <div class="w-full flex justify-between items-center mb-1">
+                            <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${labelColor}">${labelText}</span>
+                            ${item.popular ? '<span class="text-[10px] bg-amber-50 text-amber-600 font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5"><i data-lucide="star" class="w-2.5 h-2.5 fill-amber-500 text-amber-500"></i> Phổ biến</span>' : ''}
+                        </div>
+
+                        <!-- Big Symbol -->
+                        <span class="text-4xl sm:text-5xl font-serif font-semibold text-slate-800 my-2 group-hover:scale-110 transition-transform duration-200 select-none">${item.char}</span>
+                        
+                        <!-- Name & metadata -->
+                        <h4 class="font-bold text-slate-800 text-sm mt-1">${item.name}</h4>
+                        <div class="w-full border-t border-slate-100 my-2"></div>
+                        
+                        <!-- Detailed codes info -->
+                        <div class="w-full text-left space-y-1 text-xs">
+                            <div class="flex justify-between text-slate-500">
+                                <span>LaTeX:</span>
+                                <code class="text-indigo-600 font-mono font-semibold">${item.latex}</code>
+                            </div>
+                            <div class="flex justify-between text-slate-500">
+                                <span>HTML:</span>
+                                <code class="text-slate-600 font-mono">${item.html}</code>
+                            </div>
+                        </div>
+
+                        <!-- Description snippet -->
+                        <p class="text-[11px] text-slate-400 mt-2 text-center line-clamp-2 h-8 w-full border-t border-slate-50 pt-1 group-hover:text-slate-600 transition-colors" title="${item.usage}">
+                            ${item.usage}
+                        </p>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+
+            // Re-render icons since they are dynamically created
+            lucide.createIcons();
+        }
+
+        // Change copy mode state and update buttons
+        function setCopyMode(mode) {
+            currentCopyMode = mode;
+            
+            // Reset active classes
+            const btns = ['btn-mode-char', 'btn-mode-latex', 'btn-mode-html'];
+            btns.forEach(id => {
+                const btn = document.getElementById(id);
+                btn.className = "flex-1 sm:flex-initial text-xs font-medium px-3 py-2 rounded-lg transition-all text-slate-600 hover:text-slate-800";
+            });
+
+            // Set active class
+            const activeBtn = document.getElementById(`btn-mode-${mode}`);
+            activeBtn.className = "flex-1 sm:flex-initial text-xs font-medium px-3 py-2 rounded-lg transition-all bg-indigo-600 text-white shadow-sm";
+            
+            // Notification of mode switch
+            let modeName = "Ký tự chính";
+            if (mode === 'latex') modeName = "Mã lệnh LaTeX";
+            if (mode === 'html') modeName = "Mã thực thể HTML";
+            
+            showToast(`Đã chuyển đổi kiểu sao chép thành: ${modeName}`, "info");
+        }
+
+        // Filter Category
+        function filterCategory(category) {
+            currentCategory = category;
+
+            const cats = ['all', 'lowercase', 'uppercase', 'popular'];
+            cats.forEach(cat => {
+                const btn = document.getElementById(`filter-${cat}`);
+                if (cat === category) {
+                    btn.className = "text-xs font-semibold px-3.5 py-2 rounded-lg bg-indigo-600 text-white shadow-sm transition-all whitespace-nowrap";
+                } else {
+                    btn.className = "text-xs font-semibold px-3.5 py-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all whitespace-nowrap";
+                }
+            });
+
+            renderCards();
+        }
+
+        // Search bar interaction
+        function filterCards() {
+            searchKeyword = document.getElementById('search-input').value;
+            renderCards();
+        }
+
+        // Master copy function utilizing standard document.execCommand for iframe robustness
+        function copyText(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            textarea.style.pointerEvents = 'none';
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            let success = false;
+            try {
+                success = document.execCommand('copy');
+            } catch (err) {
+                console.error('Lỗi khi sao chép:', err);
+            }
+            document.body.removeChild(textarea);
+            return success;
+        }
+
+        // Click Handler for Cards
+        function handleCardClick(char, latex, html) {
+            let stringToCopy = '';
+            let label = '';
+
+            switch (currentCopyMode) {
+                case 'latex':
+                    stringToCopy = latex;
+                    label = "Mã LaTeX";
+                    break;
+                case 'html':
+                    stringToCopy = html;
+                    label = "Mã HTML";
+                    break;
+                case 'char':
+                default:
+                    stringToCopy = char;
+                    label = "Ký tự";
+                    break;
+            }
+
+            const success = copyText(stringToCopy);
+            if (success) {
+                showToast(`Đã sao chép ${label}: "${stringToCopy}"`, "success");
+                
+                // Also append the character automatically to the sandbox for user testing
+                const sandbox = document.getElementById('sandbox-area');
+                sandbox.value = sandbox.value + char;
+            } else {
+                showToast("Không thể sao chép, vui lòng gõ tay.", "error");
+            }
+        }
+
+        // Toast Notification Trigger
+        let toastTimeout;
+        function showToast(message, type = "success") {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            const toastTitle = document.getElementById('toast-title');
+            const iconContainer = document.getElementById('toast-icon-container');
+
+            toastMsg.innerText = message;
+
+            if (type === "success") {
+                toastTitle.innerText = "Đã sao chép thành công!";
+                iconContainer.className = "p-1 bg-emerald-500 rounded-lg";
+                iconContainer.innerHTML = '<i data-lucide="check" class="w-4 h-4 text-white"></i>';
+            } else if (type === "info") {
+                toastTitle.innerText = "Cập nhật cấu hình:";
+                iconContainer.className = "p-1 bg-indigo-500 rounded-lg";
+                iconContainer.innerHTML = '<i data-lucide="info" class="w-4 h-4 text-white"></i>';
+            } else {
+                toastTitle.innerText = "Có lỗi xảy ra!";
+                iconContainer.className = "p-1 bg-rose-500 rounded-lg";
+                iconContainer.innerHTML = '<i data-lucide="x" class="w-4 h-4 text-white"></i>';
+            }
+
+            // Re-render icons inside toast
+            lucide.createIcons();
+
+            // Clear existing timeout
+            clearTimeout(toastTimeout);
+
+            // Animate In
+            toast.className = "fixed bottom-6 right-6 transform translate-y-0 opacity-100 bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 transition-all duration-300 z-50 pointer-events-none max-w-sm";
+
+            // Animate Out after 3s
+            toastTimeout = setTimeout(() => {
+                toast.className = "fixed bottom-6 right-6 transform translate-y-20 opacity-0 bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 transition-all duration-300 z-50 pointer-events-none max-w-sm";
+            }, 3000);
+        }
+
+        // Sandbox Utilities
+        function clearSandbox() {
+            document.getElementById('sandbox-area').value = '';
+            showToast("Đã dọn dẹp nháp nhanh!", "info");
+        }
+
+        function copySandboxText() {
+            const text = document.getElementById('sandbox-area').value;
+            if (!text.trim()) {
+                showToast("Khu vực nháp đang trống rỗng!", "error");
+                return;
+            }
+            const success = copyText(text);
+            if (success) {
+                showToast(`Đã sao chép toàn bộ nháp!`, "success");
+            }
+        }
+
+        function insertTemplate() {
+            const templates = [
+                "E = m * c² (Phương trình Einstein)",
+                "λ = h / p (Bước sóng de Broglie)",
+                "Δy / Δx = f'(x) (Đạo hàm vi phân)",
+                "σ = (Σ (x - μ)²) / N (Độ lệch chuẩn thống kê)",
+                "Φ = B * A * cos(θ) (Công thức tính từ thông)",
+                "ω = 2 * π * f (Tần số góc chuyển động tròn)"
+            ];
+            const randomTemplate = templates[Math.floor(Math.random() * templates.length)];
+            document.getElementById('sandbox-area').value = randomTemplate;
+            showToast("Đã chèn một phương trình mẫu!", "info");
+        }
+
+        function updateStatsCount() {
+            document.getElementById('stats-count').innerText = greekLetters.length;
+        }
+    </script>
+</body>
+</html>
