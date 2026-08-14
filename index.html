@@ -3,15 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MathForge - Premium LaTeX Compiler</title>
+  <title>MathForge - Academic LaTeX Compiler</title>
   
-  <!-- Google Fonts -->
+  <!-- Premium Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
   
-  <!-- FontAwesome & Lucide Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Ultra-light Icons (Lucide) -->
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <!-- Custom Styling -->
@@ -38,205 +37,234 @@
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" id="MathJax-script" async></script>
 </head>
 <body>
-  <div class="ambient-glow glow-1"></div>
-  <div class="ambient-glow glow-2"></div>
-  <div class="ambient-glow glow-3"></div>
-  
-  <header class="app-header">
+  <!-- Haptic Noise Texture -->
+  <div class="noise-overlay"></div>
+
+  <!-- Header: Editorial Luxury -->
+  <header class="app-header reveal-up">
+    <div class="badge-eyebrow">Academic Edition</div>
     <div class="logo">
-      <div class="logo-icon-wrapper">
-        <i class="fa-solid fa-square-root-variable"></i>
-      </div>
-      <h1>Math<span>Forge</span></h1>
+      <h1 class="serif-title">MathForge</h1>
     </div>
-    <p class="subtitle">Biên dịch công thức LaTeX sang Vector SVG & PNG sắc nét</p>
+    <p class="subtitle">Biên dịch LaTeX sang định dạng Vector SVG/PNG sắc nét.</p>
   </header>
 
   <main class="app-container">
-    <!-- Left Column: Input and Snippets -->
-    <section class="panel glass-panel editor-panel">
-      <div class="panel-header">
-        <h2><i data-lucide="code-2" class="icon-accent"></i> Nhập công thức LaTeX</h2>
-        <span class="badge">TeX</span>
-      </div>
-      
-      <!-- Snippets Toolbar -->
-      <div class="toolbar">
-        <div class="toolbar-group primary-tools">
-          <button class="tool-btn premium-btn" id="btn-open-greek-modal" title="Mở bảng ký tự Hy Lạp">
-            <i data-lucide="sigma"></i> Bảng Ký Tự Hy Lạp
-          </button>
-          <div class="quick-symbols">
-            <button class="tool-btn small-btn" data-snippet="\alpha" title="Alpha">α</button>
-            <button class="tool-btn small-btn" data-snippet="\beta" title="Beta">β</button>
-            <button class="tool-btn small-btn" data-snippet="\theta" title="Theta">θ</button>
-            <button class="tool-btn small-btn" data-snippet="\pi" title="Pi">π</button>
-            <button class="tool-btn small-btn" data-snippet="\infty" title="Vô cùng">∞</button>
-            <button class="tool-btn small-btn" data-snippet="\partial" title="Đạo hàm riêng">∂</button>
-          </div>
-        </div>
-
-        <div class="toolbar-group">
-          <button class="tool-btn" data-snippet="\frac{a}{b}" title="Phân số"><span class="fraction"><span>a</span><span>b</span></span></button>
-          <button class="tool-btn" data-snippet="\sqrt{x}" title="Căn bậc 2">√x</button>
-          <button class="tool-btn" data-snippet="x^{n}" title="Mũ">xⁿ</button>
-          <button class="tool-btn" data-snippet="x_{i}" title="Chỉ số dưới">xᵢ</button>
-          <button class="tool-btn" data-snippet="\int_{a}^{b} x \, dx" title="Tích phân">∫</button>
-          <button class="tool-btn" data-snippet="\sum_{i=1}^{n}" title="Tổng">∑</button>
-          <button class="tool-btn" data-snippet="\lim_{x \to \infty}" title="Giới hạn">lim</button>
+    
+    <!-- Left Column: Editor (Double-Bezel Architecture) -->
+    <section class="bezel-outer reveal-up" style="--delay: 100ms;">
+      <div class="bezel-inner editor-panel">
+        
+        <div class="panel-header">
+          <h2 class="sans-title text-charcoal">Soạn thảo LaTeX</h2>
+          <span class="status-indicator"></span>
         </div>
         
-        <div class="toolbar-group">
-          <button class="tool-btn" data-snippet="\begin{matrix} a & b \\ c & d \end{matrix}" title="Ma trận 2x2">Matrix</button>
-          <button class="tool-btn" data-snippet="\left( x \right)" title="Ngoặc tròn ()">( )</button>
-          <button class="tool-btn" data-snippet="\left[ x \right]" title="Ngoặc vuông []">[ ]</button>
-          <button class="tool-btn" data-snippet="\left\{ x \right\}" title="Ngoặc nhọn {}">{ }</button>
-        </div>
-      </div>
-      
-      <div class="textarea-wrapper">
-        <textarea id="latex-input" placeholder="Nhập mã LaTeX... Ví dụ: \int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}">\int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}</textarea>
-        <div class="focus-ring"></div>
-      </div>
-
-      <!-- Controls / Options -->
-      <div class="options-container">
-        <div class="option-item">
-          <label for="display-mode"><i data-lucide="align-center"></i> Hiển thị</label>
-          <select id="display-mode" class="glass-input">
-            <option value="display" selected>Display (Căn giữa)</option>
-            <option value="inline">Inline (Trên dòng)</option>
-          </select>
-        </div>
-
-        <div class="option-item">
-          <label for="scale-slider"><i data-lucide="scaling"></i> Phóng to (<span id="scale-value">2.0</span>x)</label>
-          <input type="range" id="scale-slider" min="1.0" max="5.0" step="0.1" value="2.0" class="premium-slider">
-        </div>
-
-        <div class="option-item full-width">
-          <label><i data-lucide="palette"></i> Màu sắc</label>
-          <div class="color-picker-group">
-            <div class="color-swatches">
-              <button class="color-swatch active" data-color="#ffffff" style="background-color: #ffffff;" title="Trắng"></button>
-              <button class="color-swatch" data-color="#94a3b8" style="background-color: #94a3b8;" title="Xám"></button>
-              <button class="color-swatch" data-color="#60a5fa" style="background-color: #60a5fa;" title="Xanh dương"></button>
-              <button class="color-swatch" data-color="#34d399" style="background-color: #34d399;" title="Xanh lá"></button>
-              <button class="color-swatch" data-color="#fbbf24" style="background-color: #fbbf24;" title="Vàng"></button>
-              <button class="color-swatch" data-color="#f43f5e" style="background-color: #f43f5e;" title="Đỏ"></button>
+        <!-- Snippets Toolbar -->
+        <div class="toolbar">
+          
+          <div class="toolbar-row">
+            <button class="cta-pill group" id="btn-open-greek-modal" title="Bảng Ký Tự Hy Lạp">
+              <span class="cta-text">Ký tự Hy Lạp</span>
+              <span class="cta-icon-wrapper"><i data-lucide="sigma" stroke-width="1.5"></i></span>
+            </button>
+            <div class="quick-symbols">
+              <button class="tool-text-btn" data-snippet="\alpha">α</button>
+              <button class="tool-text-btn" data-snippet="\beta">β</button>
+              <button class="tool-text-btn" data-snippet="\theta">θ</button>
+              <button class="tool-text-btn" data-snippet="\pi">π</button>
+              <button class="tool-text-btn" data-snippet="\infty">∞</button>
+              <button class="tool-text-btn" data-snippet="\partial">∂</button>
             </div>
-            <div class="custom-color-wrapper">
-              <input type="color" id="custom-color-picker" value="#ffffff" title="Tùy chỉnh">
+          </div>
+
+          <div class="toolbar-divider"></div>
+
+          <div class="toolbar-row wrap">
+            <button class="tool-icon-btn group" data-snippet="\frac{a}{b}" title="Phân số">
+              <span class="fraction"><span>a</span><span>b</span></span>
+            </button>
+            <button class="tool-icon-btn group" data-snippet="\sqrt{x}" title="Căn bậc 2">√x</button>
+            <button class="tool-icon-btn group" data-snippet="x^{n}" title="Mũ">xⁿ</button>
+            <button class="tool-icon-btn group" data-snippet="x_{i}" title="Chỉ số dưới">xᵢ</button>
+            <button class="tool-icon-btn group" data-snippet="\int_{a}^{b} x \, dx" title="Tích phân">∫</button>
+            <button class="tool-icon-btn group" data-snippet="\sum_{i=1}^{n}" title="Tổng">∑</button>
+            <button class="tool-icon-btn group" data-snippet="\lim_{x \to \infty}" title="Giới hạn">lim</button>
+            <span class="spacer"></span>
+            <button class="tool-icon-btn group" data-snippet="\begin{matrix} a & b \\ c & d \end{matrix}" title="Ma trận 2x2"><i data-lucide="grid-2x2" stroke-width="1.5"></i></button>
+            <button class="tool-icon-btn group" data-snippet="\left( x \right)" title="Ngoặc tròn ()">( )</button>
+            <button class="tool-icon-btn group" data-snippet="\left[ x \right]" title="Ngoặc vuông []">[ ]</button>
+            <button class="tool-icon-btn group" data-snippet="\left\{ x \right\}" title="Ngoặc nhọn {}">{ }</button>
+          </div>
+        </div>
+        
+        <div class="textarea-wrapper">
+          <textarea id="latex-input" placeholder="Nhập mã LaTeX... Ví dụ: \int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}">\int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}</textarea>
+        </div>
+
+        <!-- Editor Options -->
+        <div class="options-container">
+          <div class="option-group">
+            <label for="display-mode" class="sans-label">Hiển thị</label>
+            <div class="select-wrapper">
+              <select id="display-mode" class="refined-input">
+                <option value="display" selected>Display (Căn giữa)</option>
+                <option value="inline">Inline (Trên dòng)</option>
+              </select>
+              <i data-lucide="chevron-down" class="select-icon"></i>
+            </div>
+          </div>
+
+          <div class="option-group">
+            <label for="scale-slider" class="sans-label">Tỷ lệ: <span id="scale-value">2.0</span>x</label>
+            <input type="range" id="scale-slider" min="1.0" max="5.0" step="0.1" value="2.0" class="haptic-slider">
+          </div>
+
+          <div class="option-group">
+            <label class="sans-label">Màu sắc</label>
+            <div class="color-picker-row">
+              <div class="color-swatches">
+                <button class="color-swatch active" data-color="#1C1917" style="background-color: #1C1917;" title="Charcoal"></button>
+                <button class="color-swatch" data-color="#000000" style="background-color: #000000;" title="Đen tuyền"></button>
+                <button class="color-swatch" data-color="#4338CA" style="background-color: #4338CA;" title="Indigo"></button>
+                <button class="color-swatch" data-color="#047857" style="background-color: #047857;" title="Xanh lá thẫm"></button>
+                <button class="color-swatch" data-color="#B91C1C" style="background-color: #B91C1C;" title="Đỏ Bordeaux"></button>
+                <button class="color-swatch" data-color="#FFFFFF" style="background-color: #FFFFFF; border: 1px solid #E5E5E5;" title="Trắng"></button>
+              </div>
+              <div class="custom-color-wrapper">
+                <input type="color" id="custom-color-picker" value="#1C1917" title="Tùy chỉnh">
+              </div>
             </div>
           </div>
         </div>
+
       </div>
     </section>
 
-    <!-- Right Column: Live Preview and Copy Actions -->
-    <section class="panel glass-panel preview-panel">
-      <div class="panel-header">
-        <h2><i data-lucide="eye" class="icon-accent"></i> Xem trước</h2>
-        <div class="bg-toggle-container glass-input">
-          <button class="bg-toggle-btn active" data-bg="checkered" title="Caro"><i data-lucide="grid-3x3"></i></button>
-          <button class="bg-toggle-btn" data-bg="dark" title="Tối"><i data-lucide="moon"></i></button>
-          <button class="bg-toggle-btn" data-bg="light" title="Sáng"><i data-lucide="sun"></i></button>
-        </div>
-      </div>
-
-      <!-- Preview Render Target -->
-      <div class="preview-area checkered" id="preview-box">
-        <div id="math-output"></div>
-      </div>
-
-      <!-- Copy & Download Actions -->
-      <div class="actions-grid">
-        <button id="btn-copy-svg" class="action-btn btn-primary glow-effect">
-          <i data-lucide="copy"></i> Sao chép SVG
-        </button>
-        <button id="btn-copy-png" class="action-btn btn-primary glow-effect">
-          <i data-lucide="image"></i> Sao chép PNG
-        </button>
-
-        <button id="btn-copy-docx-latex" class="action-btn btn-secondary">
-          <i data-lucide="file-text"></i> LaTeX (Docs/Word)
-        </button>
-        <button id="btn-copy-mathml" class="action-btn btn-secondary">
-          <i data-lucide="calculator"></i> MathML (Word)
-        </button>
-
-        <button id="btn-download-svg" class="action-btn btn-secondary">
-          <i data-lucide="download"></i> Tải SVG
-        </button>
-        <button id="btn-download-png" class="action-btn btn-secondary">
-          <i data-lucide="download"></i> Tải PNG
-        </button>
+    <!-- Right Column: Preview & Actions -->
+    <section class="bezel-outer reveal-up" style="--delay: 200ms;">
+      <div class="bezel-inner preview-panel flex-col">
         
-        <button id="btn-save-formula" class="action-btn btn-accent full-width">
-          <i data-lucide="bookmark-plus"></i> Lưu vào thư viện
-        </button>
+        <div class="panel-header">
+          <h2 class="sans-title text-charcoal">Kết quả</h2>
+          <div class="bg-toggle-container">
+            <button class="bg-toggle-btn active" data-bg="light" title="Nền sáng (Mặc định)"><i data-lucide="sun" stroke-width="1.5"></i></button>
+            <button class="bg-toggle-btn" data-bg="checkered" title="Trong suốt"><i data-lucide="grid-3x3" stroke-width="1.5"></i></button>
+            <button class="bg-toggle-btn" data-bg="dark" title="Nền tối"><i data-lucide="moon" stroke-width="1.5"></i></button>
+          </div>
+        </div>
+
+        <!-- Preview Render Target -->
+        <div class="preview-area light" id="preview-box">
+          <div id="math-output"></div>
+        </div>
+
+        <!-- Export Actions (Minimalist Buttons) -->
+        <div class="actions-grid">
+          <button id="btn-copy-svg" class="action-btn group">
+            <span class="action-text">Sao chép SVG</span>
+            <span class="action-icon"><i data-lucide="copy" stroke-width="1.5"></i></span>
+          </button>
+          <button id="btn-copy-png" class="action-btn group">
+            <span class="action-text">Sao chép PNG</span>
+            <span class="action-icon"><i data-lucide="image" stroke-width="1.5"></i></span>
+          </button>
+          <button id="btn-download-svg" class="action-btn outline group">
+            <span class="action-text">Tải SVG</span>
+            <span class="action-icon"><i data-lucide="download" stroke-width="1.5"></i></span>
+          </button>
+          <button id="btn-download-png" class="action-btn outline group">
+            <span class="action-text">Tải PNG</span>
+            <span class="action-icon"><i data-lucide="download" stroke-width="1.5"></i></span>
+          </button>
+          <button id="btn-copy-docx-latex" class="action-btn outline group col-span-2">
+            <span class="action-text">Sao chép LaTeX dạng $$...$$ (Google Docs)</span>
+            <span class="action-icon"><i data-lucide="file-text" stroke-width="1.5"></i></span>
+          </button>
+          <button id="btn-copy-mathml" class="action-btn outline group col-span-2">
+            <span class="action-text">Sao chép MathML (MS Word)</span>
+            <span class="action-icon"><i data-lucide="calculator" stroke-width="1.5"></i></span>
+          </button>
+          
+          <button id="btn-save-formula" class="cta-pill dark group col-span-2 full-width mt-4">
+            <span class="cta-text">Lưu vào thư viện công thức</span>
+            <span class="cta-icon-wrapper"><i data-lucide="bookmark-plus" stroke-width="1.5"></i></span>
+          </button>
+        </div>
+
       </div>
     </section>
   </main>
 
-  <!-- Library / History Section -->
-  <section class="app-container mt-6">
-    <div class="panel glass-panel library-panel">
-      <div class="panel-header">
-        <h2><i data-lucide="library" class="icon-accent"></i> Thư viện công thức</h2>
-        <button id="btn-clear-library" class="clear-btn"><i data-lucide="trash-2"></i> Xóa tất cả</button>
+  <!-- Library Section (Asymmetrical Grid) -->
+  <section class="app-container section-margin">
+    <div class="bezel-outer reveal-up" style="--delay: 300ms;">
+      <div class="bezel-inner">
+        <div class="panel-header">
+          <h2 class="sans-title text-charcoal">Thư viện của bạn</h2>
+          <button id="btn-clear-library" class="text-link-btn"><i data-lucide="trash-2" stroke-width="1.5"></i> Xóa tất cả</button>
+        </div>
+        
+        <div class="library-empty" id="library-empty-msg">
+          <span class="empty-icon"><i data-lucide="library" stroke-width="1"></i></span>
+          <p>Thư viện hiện đang trống. Các công thức bạn lưu sẽ hiển thị tại đây.</p>
+        </div>
+        
+        <div class="library-masonry" id="library-items">
+          <!-- Populated by JS -->
+        </div>
       </div>
-      <div class="library-empty" id="library-empty-msg">
-        <i data-lucide="info"></i> Chưa có công thức nào được lưu. Bấm "Lưu vào thư viện" để sử dụng lại sau này.
-      </div>
-      <div class="library-grid" id="library-items"></div>
     </div>
   </section>
 
-  <!-- Greek Letters Modal -->
+  <!-- High-End Academic Greek Modal -->
   <div class="modal-overlay" id="greek-modal">
-    <div class="modal-content glass-panel">
-      <div class="modal-header">
-        <div>
-          <h2 class="modal-title"><i data-lucide="binary" class="icon-accent"></i> Bảng Ký Tự Hy Lạp</h2>
-          <p class="modal-subtitle">Click vào ký tự để chèn trực tiếp vào công thức LaTeX</p>
+    <div class="bezel-outer modal-bezel">
+      <div class="bezel-inner modal-inner">
+        
+        <div class="modal-header">
+          <div>
+            <div class="badge-eyebrow mb-2">Reference Table</div>
+            <h2 class="serif-title small">Bảng Ký Tự Hy Lạp</h2>
+          </div>
+          <button class="modal-close group" id="btn-close-greek-modal">
+            <i data-lucide="x" stroke-width="1.5" class="group-hover:rotate-90 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"></i>
+          </button>
         </div>
-        <button class="modal-close" id="btn-close-greek-modal"><i data-lucide="x"></i></button>
-      </div>
-      
-      <div class="modal-controls">
-        <div class="search-box glass-input">
-          <i data-lucide="search"></i>
-          <input type="text" id="greek-search-input" placeholder="Tìm kiếm tên, ký tự, ý nghĩa...">
+        
+        <div class="modal-controls">
+          <div class="search-box">
+            <i data-lucide="search" stroke-width="1.5"></i>
+            <input type="text" id="greek-search-input" placeholder="Tìm kiếm tên, ký tự, hoặc ý nghĩa..." class="refined-input">
+          </div>
+          <div class="filter-group">
+            <button class="filter-btn active" data-category="all">Tất cả</button>
+            <button class="filter-btn" data-category="lowercase">Thường</button>
+            <button class="filter-btn" data-category="uppercase">Hoa</button>
+            <button class="filter-btn" data-category="popular">Phổ biến</button>
+          </div>
         </div>
-        <div class="filter-group">
-          <button class="filter-btn active" data-category="all">Tất cả</button>
-          <button class="filter-btn" data-category="lowercase">Chữ thường</button>
-          <button class="filter-btn" data-category="uppercase">Chữ hoa</button>
-          <button class="filter-btn" data-category="popular">Phổ biến</button>
-        </div>
-      </div>
 
-      <div class="modal-body">
-        <div id="greek-cards-grid" class="greek-grid">
-          <!-- Cards injected via JS -->
+        <div class="modal-body">
+          <div id="greek-cards-grid" class="greek-masonry">
+            <!-- Cards injected via JS -->
+          </div>
+          <div id="greek-empty-state" class="empty-state hidden">
+            <span class="empty-icon"><i data-lucide="search-x" stroke-width="1"></i></span>
+            <p>Không tìm thấy kết quả phù hợp.</p>
+          </div>
         </div>
-        <div id="greek-empty-state" class="empty-state hidden">
-          <i data-lucide="search-x"></i>
-          <p>Không tìm thấy ký tự nào</p>
-        </div>
+        
       </div>
     </div>
   </div>
 
-  <!-- Hidden Canvas -->
+  <!-- Hidden elements for export & toasts -->
   <canvas id="export-canvas" style="display: none;"></canvas>
-
-  <!-- Toast Container -->
   <div class="toast-container" id="toast-box"></div>
 
-  <footer>
-    <p>&copy; 2026 MathForge. Thiết kế hiện đại, hỗ trợ hiệu suất cao.</p>
+  <footer class="app-footer">
+    <p>MathForge &copy; 2026. Thiết kế theo phong cách Học Thuật Hiện Đại.</p>
   </footer>
 
   <script src="app.js"></script>

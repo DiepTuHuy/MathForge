@@ -55,8 +55,8 @@ const state = {
   latex: '',
   displayMode: 'display',
   scale: 2.0,
-  color: '#ffffff',
-  bgMode: 'checkered',
+  color: '#1C1917', // Match new Charcoal default
+  bgMode: 'light',
   library: JSON.parse(localStorage.getItem('mathforge_library') || '[]'),
   greekCategory: 'all',
   greekSearch: ''
@@ -118,8 +118,8 @@ function showToast(message, type = 'info') {
   setTimeout(() => {
     toast.style.animation = 'none';
     toast.offsetHeight;
-    toast.style.animation = 'slideIn 0.3s reverse forwards';
-    setTimeout(() => toast.remove(), 300);
+    toast.style.animation = 'toastSlide 0.4s reverse forwards';
+    setTimeout(() => toast.remove(), 400);
   }, 3000);
 }
 
@@ -158,10 +158,10 @@ function updatePreview() {
         const svg = elements.mathOutput.querySelector('svg');
         if (svg) {
           svg.style.fontSize = `${state.scale}rem`;
-          svg.style.transition = 'font-size 0.2s ease';
+          svg.style.transition = 'font-size 0.3s cubic-bezier(0.32, 0.72, 0, 1)';
         }
       } catch (err) {
-        elements.mathOutput.innerHTML = `<span style="color: var(--error);"><i data-lucide="alert-triangle"></i> Lỗi cú pháp LaTeX</span>`;
+        elements.mathOutput.innerHTML = `<span style="color: #DC2626;"><i data-lucide="alert-triangle"></i> Lỗi cú pháp LaTeX</span>`;
         lucide.createIcons();
       }
     } else {
@@ -221,7 +221,7 @@ function renderGreekLetters() {
     
     filtered.forEach(item => {
       const card = document.createElement('div');
-      card.className = 'greek-card';
+      card.className = 'greek-card group';
       
       let badgeClass = item.type === 'lowercase' ? 'badge-lower' : 'badge-upper';
       let badgeText = item.type === 'lowercase' ? 'Thường' : 'Hoa';
@@ -236,11 +236,12 @@ function renderGreekLetters() {
         <div class="greek-name">${item.name}</div>
         <div class="greek-divider"></div>
         <div class="greek-codes">
-          <div><span>LaTeX:</span> <code>${item.latex}</code></div>
+          <div>LaTeX: <code>${item.latex}</code></div>
         </div>
         <div class="greek-usage" title="${item.usage}">${item.usage}</div>
         <div class="greek-card-overlay">
-          <i data-lucide="plus-circle" style="width:14px;height:14px;"></i> Chèn vào công thức
+          <i data-lucide="plus" stroke-width="1.5"></i>
+          <span>Chèn ký tự</span>
         </div>
       `;
       
@@ -288,7 +289,7 @@ elements.greekFilterBtns.forEach(btn => {
 /* -----------------------------------------
    Event Listeners (Toolbar, Controls)
 ----------------------------------------- */
-document.querySelectorAll('.tool-btn[data-snippet]').forEach(btn => {
+document.querySelectorAll('.tool-icon-btn[data-snippet], .tool-text-btn[data-snippet]').forEach(btn => {
   btn.addEventListener('click', () => {
     const snippet = btn.getAttribute('data-snippet');
     insertTextAtCursor(elements.latexInput, snippet);
@@ -446,9 +447,12 @@ function updateLibraryUI() {
   elements.libraryItems.innerHTML = '';
   if (state.library.length === 0) {
     elements.libraryEmptyMsg.style.display = 'flex';
+    elements.libraryItems.style.display = 'none';
     return;
   }
+  
   elements.libraryEmptyMsg.style.display = 'none';
+  elements.libraryItems.style.display = 'grid';
   
   state.library.forEach((item, index) => {
     const card = document.createElement('div');
@@ -472,13 +476,13 @@ function updateLibraryUI() {
     
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'library-item-delete';
-    deleteBtn.innerHTML = '<i data-lucide="trash-2"></i>';
+    deleteBtn.innerHTML = '<i data-lucide="trash-2" stroke-width="1.5"></i>';
     deleteBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       state.library.splice(index, 1);
       localStorage.setItem('mathforge_library', JSON.stringify(state.library));
       updateLibraryUI();
-      showToast('Đã xóa.', 'info');
+      showToast('Đã xóa khỏi thư viện.', 'info');
     });
     
     footer.appendChild(code);
@@ -516,12 +520,12 @@ elements.btnSaveFormula.addEventListener('click', () => {
   state.library.unshift({ latex: state.latex, displayMode: state.displayMode, scale: state.scale, color: state.color });
   localStorage.setItem('mathforge_library', JSON.stringify(state.library));
   updateLibraryUI();
-  showToast('Đã lưu!', 'success');
+  showToast('Đã lưu thành công!', 'success');
 });
 
 elements.btnClearLibrary.addEventListener('click', () => {
   if (state.library.length === 0) return;
-  if (confirm('Xóa toàn bộ thư viện?')) {
+  if (confirm('Xóa toàn bộ thư viện? Hành động này không thể hoàn tác.')) {
     state.library = [];
     localStorage.removeItem('mathforge_library');
     updateLibraryUI();
